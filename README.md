@@ -1,0 +1,2 @@
+# DomainNameAnalysis
+自动获取本地外网ip并通过阿里云SDK修改解析ip

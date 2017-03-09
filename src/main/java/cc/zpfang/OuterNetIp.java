@@ -27,14 +27,16 @@ public class OuterNetIp {
         URLConnection connection;
         BufferedReader in = null;
         try {
+            logger.info("connecting " + QUERY_ADDRESS);
             URL url = new URL(QUERY_ADDRESS);
             connection = url.openConnection();
             connection.setRequestProperty("accept", "*/*");
             connection.setRequestProperty("connection", "KeepAlive");
             connection.setRequestProperty("user-agent", "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1;SV1)");
-
+            connection.setConnectTimeout(3000);
+            connection.setReadTimeout(3000);
             connection.connect();
-
+            logger.info("connected... ");
             in = new BufferedReader(new InputStreamReader(
                     connection.getInputStream()));
             String line;
@@ -43,16 +45,16 @@ public class OuterNetIp {
             }
             logger.info("get ip result: " + result);
         } catch (MalformedURLException e) {
-            e.printStackTrace();
+            logger.info("URL exception: " + e);
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.info("io exception: " + e);
         } finally {
             try {
                 if (in != null) {
                     in.close();
                 }
             } catch (IOException e) {
-                e.printStackTrace();
+                logger.info("close error, io exception: " + e);
             }
         }
         return result;

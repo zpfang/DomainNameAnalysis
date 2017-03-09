@@ -15,7 +15,8 @@ public class AnalysisTask {
 
     public static void main(String[] args) throws ClientException {
         //args[0] accessKeyId, args[1] accessKeySecret
-        final ModifyDomainRecord domainRecord = new ModifyDomainRecord(args[0], args[1]);
+        final ModifyDomainRecord domainRecord = new ModifyDomainRecord(args[0],
+                args[1]);
         final OuterNetIp outerNetIp = new OuterNetIp();
 
         Runnable runnable = new Runnable() {

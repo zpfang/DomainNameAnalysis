@@ -21,6 +21,7 @@ public class ModifyDomainRecord {
     private static final String DOMAIN_NAME = "zpfang.cc";
     private static final String RECORD_TYPE_A = "A";
     private static final String RR = "www";
+    private static final String ERROR_CODE_IP_NOTCAHNGE = "DomainRecordDuplicate";
     private static IAcsClient client = null;
 
     static {
@@ -46,9 +47,16 @@ public class ModifyDomainRecord {
             String recordId = getRecordId();
             modifyRecordIp(recordId, newIp);
         } catch (ClientException exception) {
-            logger.info("modify record fail:" + exception);
+            if (ERROR_CODE_IP_NOTCAHNGE.equals(exception.getErrCode())) {
+                logger.info(exception.getErrCode() + ", ip is not change.");
+                ip = newIp;
+                return true;
+            }
+            logger.info("modify record fail:" + "errorCode:" + exception.getErrCode()
+                    + ", errorMsg: " + exception.getErrMsg() + " ", exception);
             return false;
         }
+        logger.info("modify record success.");
         ip = newIp;
         return true;
     }

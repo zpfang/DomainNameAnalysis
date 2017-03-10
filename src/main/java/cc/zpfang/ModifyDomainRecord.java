@@ -8,9 +8,12 @@ import com.aliyuncs.alidns.model.v20150109.UpdateDomainRecordRequest;
 import com.aliyuncs.exceptions.ClientException;
 import com.aliyuncs.profile.DefaultProfile;
 import com.aliyuncs.profile.IClientProfile;
+import com.google.common.base.Strings;
 import org.apache.log4j.Logger;
 
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by fangzp on 2017-03-03.
@@ -38,7 +41,18 @@ public class ModifyDomainRecord {
         client = new DefaultAcsClient(profile);
     }
 
+    public static boolean isboolIp(String ipAddress) {
+        String ip = "([1-9]|[1-9]\\d|1\\d{2}|2[0-4]\\d|25[0-5])(\\.(\\d|[1-9]\\d|1\\d{2}|2[0-4]\\d|25[0-5])){3}";
+        Pattern pattern = Pattern.compile(ip);
+        Matcher matcher = pattern.matcher(ipAddress);
+        return matcher.matches();
+    }
+
     boolean modifyRecord(String newIp) {
+        if (Strings.isNullOrEmpty(newIp) || newIp.length() > 15 || newIp.length() < 7 || !isboolIp(newIp)) {
+            logger.error("ip format is wrong: " + newIp);
+            return false;
+        }
         if (ip.equals(newIp)) {
             logger.info("ip is not changed...");
             return true;
